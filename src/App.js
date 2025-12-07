@@ -10,13 +10,11 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import Cart from './pages/Cart';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import About from './pages/About'; // <--- NEW IMPORT
 
-// --- CRITICAL FIX: IMPORT LOGIN AND REGISTER ---
-import Login from './pages/Login';      // Make sure file is src/pages/Login.js
-import Register from './pages/Register'; // Make sure file is src/pages/Register.js
-
-// Placeholders (Only if you haven't created these files yet)
-const About = () => <div style={{marginTop: '100px', textAlign:'center'}}><h1>About Us</h1></div>;
+// Placeholder for Contact (We will build this next)
 const Contact = () => <div style={{marginTop: '100px', textAlign:'center'}}><h1>Contact Us</h1></div>;
 
 function App() {
@@ -31,11 +29,12 @@ function App() {
             <Route path="/shop" element={<Shop />} />
             <Route path="/cart" element={<Cart />} />
             
-            {/* AUTH ROUTES */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             
+            {/* Now using the Real Page */}
             <Route path="/about" element={<About />} />
+            
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </div>

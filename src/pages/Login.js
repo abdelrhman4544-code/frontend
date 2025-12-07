@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Grid, Header, Message, Segment, Icon } from 'semantic-ui-react';
+import { Button, Form, Grid, Header, Message, Segment, Icon, Divider } from 'semantic-ui-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -20,73 +20,99 @@ const Login = () => {
     setLoading(true);
     setError("");
 
-    // 1. FIXED: Changed axios.post to axios.get
-    // Your backend uses: router.get('/login', ...)
+    // Using GET because your backend uses router.get('/login')
     axios.get('http://localhost:8080/api/login', {
-        // 2. FIXED: Send data as query parameters (req.query)
-        params: {
-            email: inputs.email,
-            password: inputs.password
-        }
+        params: { email: inputs.email, password: inputs.password }
     })
     .then((response) => {
         setLoading(false);
-        // Your backend returns { Status: "OK", Message: "Loged In Successfully" }
-        if (response.data.Status === "OK") {
-            alert("Login Successful!");
+        console.log("Backend Response:", response.data); // <--- Check Console for this!
+
+        // --- THE FIX IS HERE ---
+        // Scenario 1: Backend returns { Status: "OK" }
+        // Scenario 2: Backend returns { user_id: 1, name: "..." }
+        if (response.data.Status === "OK" || response.data.user_id || response.data.id) {
+            
+            // Optional: Save user to local storage so they stay logged in
+            localStorage.setItem('user', JSON.stringify(response.data));
+            
+            alert("Login Successful! Redirecting...");
             navigate('/shop'); 
         } else {
-            // Your backend returns { Status: "Error", Message: "..." }
+            // If it's not OK and has no user ID, show error
             setError(response.data.Message || "Invalid Credentials");
         }
     })
     .catch((err) => {
         setLoading(false);
         console.error(err);
-        setError("Network Error or Server Offline.");
+        setError("Network Error. Check if Backend is running.");
     });
   }
 
   return (
-    <div style={{ backgroundColor: '#f2f2f2', minHeight: '100vh', padding: '5em 0em' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundImage: 'url(https://images.unsplash.com/photo-1450778865369-0994ca878097?q=80&w=1920&auto=format&fit=crop)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      padding: '5em 0em' 
+    }}>
         <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
         <Grid.Column style={{ maxWidth: 450 }}>
-            <Header as='h2' color='teal' textAlign='center'>
-            <Icon name='sign-in' /> Log-in to your account
-            </Header>
-            <Form size='large' onSubmit={handleSubmit} loading={loading}>
-            <Segment stacked>
-                <Form.Input 
-                    fluid 
-                    icon='user' 
-                    iconPosition='left' 
-                    placeholder='E-mail address' 
-                    name="email"
-                    value={inputs.email || ""}
-                    onChange={handleChange}
-                    required
-                />
-                <Form.Input
-                    fluid
-                    icon='lock'
-                    iconPosition='left'
-                    placeholder='Password'
-                    type='password'
-                    name="password"
-                    value={inputs.password || ""}
-                    onChange={handleChange}
-                    required
-                />
+            
+            <Segment stacked style={{ padding: '2em', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
+                <Header as='h2' color='teal' textAlign='center'>
+                    <Icon name='paw' /> Welcome Back!
+                </Header>
+                <p style={{ color: '#666', marginBottom: '1.5em' }}>
+                    Login to access your pet's favorites.
+                </p>
 
-                {error && <Message negative>{error}</Message>}
+                <Form size='large' onSubmit={handleSubmit} loading={loading}>
+                    <Form.Input 
+                        fluid 
+                        icon='user' 
+                        iconPosition='left' 
+                        placeholder='E-mail address' 
+                        name="email"
+                        value={inputs.email || ""}
+                        onChange={handleChange}
+                        required
+                    />
+                    <Form.Input
+                        fluid
+                        icon='lock'
+                        iconPosition='left'
+                        placeholder='Password'
+                        type='password'
+                        name="password"
+                        value={inputs.password || ""}
+                        onChange={handleChange}
+                        required
+                    />
 
-                <Button color='teal' fluid size='large' type="submit">
-                Login
+                    {error && <Message negative>{error}</Message>}
+
+                    <Button color='teal' fluid size='large' type="submit" style={{ marginTop: '1em' }}>
+                        Login
+                    </Button>
+                </Form>
+
+                <Divider horizontal>Or Login With</Divider>
+                
+                <Button color='facebook' fluid style={{ marginBottom: '10px' }}>
+                  <Icon name='facebook' /> Facebook
                 </Button>
+                <Button color='google plus' fluid>
+                  <Icon name='google' /> Google
+                </Button>
+
             </Segment>
-            </Form>
-            <Message>
-            New to us? <Link to="/register">Sign Up</Link>
+
+            <Message attached='bottom' warning>
+                <Icon name='help' />
+                New to us? <Link to="/register" style={{ fontWeight: 'bold' }}>Sign Up here</Link>
             </Message>
         </Grid.Column>
         </Grid>
