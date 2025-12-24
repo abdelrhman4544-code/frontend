@@ -1,51 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Header, Grid, Card, Image, Icon, Button, Input, Segment, Dimmer, Loader, Checkbox, Divider, Rating, Message } from 'semantic-ui-react';
+import { Container, Header, Grid, Card, Image, Icon, Button, Input, Segment, Dimmer, Loader, Checkbox, Divider, Rating, Message, Label } from 'semantic-ui-react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 const DEFAULT_PRODUCT_IMG = 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=1000&auto=format&fit=crop';
 
-// --- 1. NEW SLIDER DATA (Bright, Distinct Images) ---
+// --- SLIDER DATA ---
 const SLIDES = [
   {
     image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=1000&auto=format&fit=crop',
-    title: 'New Arrivals Collection',
-    subtitle: 'Upgrade your pet\'s lifestyle with our latest premium accessories.'
+    title: 'THE LUXURY EDIT',
+    subtitle: 'Premium accessories for the distinguished pet.'
   },
   {
-    // New Image: Bright Cat Photo
     image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=1000&auto=format&fit=crop',
-    title: 'Purr-fect Treats',
-    subtitle: 'Delicious and organic snacks for your feline friends.'
+    title: 'ORGANIC FEAST',
+    subtitle: '100% Grain-free nutrition for optimal health.'
   },
   {
-    // New Image: Happy Dog with Shopping Bags/Bright background
     image: 'https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?q=80&w=1000&auto=format&fit=crop',
-    title: 'Summer Sale Event',
-    subtitle: 'Huge discounts on toys, grooming kits, and beds!'
+    title: 'PLAY TIME REDEFINED',
+    subtitle: 'Durable toys designed for hours of engagement.'
   }
 ];
 
+// --- RESTORED ALL TIPS (THE KNOWLEDGE BASE) ---
 const QUOTES_POOL = [
-  { icon: 'heart', color: 'red', title: 'Did You Know?', text: "Regular grooming isn't just about looking good—it helps you spot health issues early!" },
-  { icon: 'paw', color: 'orange', title: 'Adopt, Don\'t Shop', text: "Saving one dog will not change the world, but surely for that one dog, the world will change forever." },
-  { icon: 'sun', color: 'yellow', title: 'Summer Tip', text: "Never leave your pet in a parked car. Temperatures can rise to dangerous levels in minutes." },
-  { icon: 'tint', color: 'blue', title: 'Hydration Matters', text: "Cats often prefer running water. Consider a water fountain to encourage them to drink more!" },
-  { icon: 'tree', color: 'green', title: 'Walk Daily', text: "A tired dog is a good dog. Daily walks reduce anxiety and destructive behavior." },
-  { icon: 'medkit', color: 'teal', title: 'Checkups', text: "Pets age faster than us. An annual vet checkup is crucial for catching hidden problems." },
-  { icon: 'lightbulb', color: 'purple', title: 'Mental Health', text: "Puzzle toys aren't just fun—they keep your pet's brain sharp and prevent boredom." },
-  { icon: 'utensils', color: 'brown', title: 'Nutrition Fact', text: "Obesity is the #1 health problem in pets. Measure their food and limit treats!" }
+  { icon: 'heart', color: 'red', title: 'Wellness Tip', text: "Regular grooming isn't just about looks—it helps you spot health issues early!" },
+  { icon: 'sun', color: 'yellow', title: 'Summer Care', text: "Hot pavement burns paws. Test it with your hand for 5 seconds first!" },
+  { icon: 'tint', color: 'blue', title: 'Hydration', text: "Cats prefer running water. A fountain can prevent kidney issues." },
+  { icon: 'paw', color: 'orange', title: 'Adoption', text: "Saving one dog won't change the world, but the world changes for that dog." },
+  { icon: 'tree', color: 'green', title: 'Routine', text: "Daily walks reduce anxiety and destructive behavior in dogs." },
+  { icon: 'medkit', color: 'teal', title: 'Checkups', text: "Pets age faster than us. An annual vet checkup is crucial." },
+  { icon: 'lightbulb', color: 'purple', title: 'Brain Power', text: "Puzzle toys keep your pet's brain sharp and prevent boredom." },
+  { icon: 'utensils', color: 'brown', title: 'Diet', text: "Obesity is the #1 health problem. Measure food and limit treats!" }
 ];
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // --- STATE FOR FILTERS ---
+  // FILTERS
   const [searchTerm, setSearchTerm] = useState('');
-  const [minPrice, setMinPrice] = useState(''); // State for Minimum Price
-  const [maxPrice, setMaxPrice] = useState(''); // State for Maximum Price
+  const [minPrice, setMinPrice] = useState(''); 
+  const [maxPrice, setMaxPrice] = useState(''); 
   
   const { addToCart } = useCart();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -73,172 +72,213 @@ const Shop = () => {
       });
   }, []);
 
-  // --- UPDATED FILTER LOGIC ---
+  // FILTER LOGIC
   const filteredProducts = products.filter(product => {
-    // 1. Search Name Filter
     const matchesSearch = product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    // 2. Price Filter Logic
-    // We convert strings to floats. If input is empty (''), we ignore that limit.
     const price = parseFloat(product.price);
     const matchesMin = minPrice !== '' ? price >= parseFloat(minPrice) : true;
     const matchesMax = maxPrice !== '' ? price <= parseFloat(maxPrice) : true;
-
     return matchesSearch && matchesMin && matchesMax;
   });
 
   return (
-    <div style={{ marginTop: '5em', marginBottom: '4em', backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
+    <div style={{ marginTop: '0', backgroundColor: '#fff', minHeight: '100vh' }}>
       
-      {/* SLIDER SECTION */}
-      <Segment 
-        inverted 
-        vertical 
-        style={{ 
-          padding: '8em 0em', 
-          marginBottom: '3em',
-          position: 'relative',
-          transition: 'background-image 0.5s ease-in-out',
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${SLIDES[currentSlide].image})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: '450px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Icon name='angle left' size='huge' style={{ position: 'absolute', left: '20px', cursor: 'pointer', color: 'white', zIndex: 10 }} onClick={prevSlide} />
-        <Container textAlign='center'>
-          <Header as='h1' inverted style={{ fontSize: '4em', textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
-            {SLIDES[currentSlide].title}
-            <Header.Subheader style={{ color: '#f0f0f0', fontSize: '0.5em', marginTop: '10px' }}>
-              {SLIDES[currentSlide].subtitle}
-            </Header.Subheader>
-          </Header>
-          <Button color='blue' size='huge' style={{ marginTop: '1em' }}>Explore Now</Button>
+      {/* 1. CINEMATIC HEADER (Glass Effect) */}
+      <div style={{ 
+        position: 'relative',
+        height: '60vh', 
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5)), url(${SLIDES[currentSlide].image})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        transition: 'background-image 0.7s ease-in-out',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: '4em'
+      }}>
+        {/* Navigation Arrows */}
+        <Icon name='angle left' size='huge' style={{ position: 'absolute', left: '30px', cursor: 'pointer', color: 'rgba(255,255,255,0.8)', zIndex: 10 }} onClick={prevSlide} />
+        <Icon name='angle right' size='huge' style={{ position: 'absolute', right: '30px', cursor: 'pointer', color: 'rgba(255,255,255,0.8)', zIndex: 10 }} onClick={nextSlide} />
+
+        {/* Glass Box Content */}
+        <Container text textAlign='center'>
+            <div style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.15)', 
+                backdropFilter: 'blur(15px)', 
+                padding: '3em', 
+                borderRadius: '15px',
+                border: '1px solid rgba(255,255,255,0.3)',
+                boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+            }}>
+                <Header as='h1' inverted style={{ fontSize: '3.5em', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '0.2em' }}>
+                    {SLIDES[currentSlide].title}
+                </Header>
+                <p style={{ color: '#eee', fontSize: '1.2em', fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+                    {SLIDES[currentSlide].subtitle}
+                </p>
+                <Button color='orange' inverted size='large' style={{ marginTop: '1em' }}>View Collection</Button>
+            </div>
         </Container>
-        <Icon name='angle right' size='huge' style={{ position: 'absolute', right: '20px', cursor: 'pointer', color: 'white', zIndex: 10 }} onClick={nextSlide} />
-        
-        <div style={{ position: 'absolute', bottom: '20px', display: 'flex', gap: '10px' }}>
+
+        {/* Slide Dots */}
+        <div style={{ position: 'absolute', bottom: '30px', display: 'flex', gap: '15px' }}>
             {SLIDES.map((_, index) => (
-                <div key={index} onClick={() => setCurrentSlide(index)} style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: index === currentSlide ? 'white' : 'rgba(255,255,255,0.5)', cursor: 'pointer' }} />
+                <div key={index} onClick={() => setCurrentSlide(index)} style={{ 
+                    width: '12px', height: '12px', borderRadius: '50%', 
+                    backgroundColor: index === currentSlide ? 'white' : 'rgba(255,255,255,0.4)', 
+                    cursor: 'pointer', transition: 'all 0.3s' 
+                }} />
             ))}
         </div>
-      </Segment>
+      </div>
 
       <Container>
         <Grid stackable>
           
-          {/* LEFT SIDEBAR FILTERS */}
-          <Grid.Column width={5}>
-            <Segment raised color='teal'>
-              <Header as='h3' color='teal'><Icon name='filter' /> Filter Products</Header>
-              
-              {/* Name Search */}
-              <Input 
-                fluid size='large' icon='search' placeholder='Search Name...' 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)} 
-                style={{ marginBottom: '1.5em' }} 
-              />
-              
-              {/* Category Checkboxes (Visual for now unless your DB has category column) */}
-              <Divider horizontal>Categories</Divider>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '1.1em' }}>
-                <Checkbox label='Dog Food & Treats' />
-                <Checkbox label='Cat Toys & Scratchers' />
-                <Checkbox label='Pet Accessories' />
-                <Checkbox label='Health & Grooming' />
-              </div>
+          {/* 2. STICKY SIDEBAR FILTERS & TIPS */}
+          <Grid.Column width={4}>
+            <div style={{ position: 'sticky', top: '100px' }}>
+                
+                {/* FILTER BOX */}
+                <Segment basic style={{ padding: 0 }}>
+                    <Header as='h3' style={{ fontSize: '1.2em', textTransform: 'uppercase', letterSpacing: '1px', color: '#888' }}>
+                        Refine Selection
+                    </Header>
+                    <Divider />
+                    
+                    <Header as='h4'>Search</Header>
+                    <Input 
+                        fluid icon='search' placeholder='Product name...' 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)} 
+                        style={{ marginBottom: '1.5em' }} 
+                        transparent
+                        className="beast-input"
+                    />
+                    
+                    <Header as='h4'>Categories</Header>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', color: '#555' }}>
+                        <Checkbox label='Premium Food' />
+                        <Checkbox label='Interactive Toys' />
+                        <Checkbox label='Luxury Beds' />
+                        <Checkbox label='Grooming' />
+                    </div>
 
-              {/* Price Range Inputs - NOW FUNCTIONAL */}
-              <Divider horizontal>Price Range</Divider>
-              <Grid>
-                <Grid.Row columns={2}>
-                   <Grid.Column>
-                     <Input 
-                        label='$' type='number' placeholder='Min' fluid 
-                        value={minPrice}
-                        onChange={(e) => setMinPrice(e.target.value)}
-                     />
-                   </Grid.Column>
-                   <Grid.Column>
-                     <Input 
-                        label='$' type='number' placeholder='Max' fluid 
-                        value={maxPrice}
-                        onChange={(e) => setMaxPrice(e.target.value)}
-                     />
-                   </Grid.Column>
-                </Grid.Row>
-              </Grid>
-              
-              {/* Clear Filters Button */}
-              <Button 
-                basic color='red' fluid size='large' style={{ marginTop: '1.5em' }}
-                onClick={() => { setSearchTerm(''); setMinPrice(''); setMaxPrice(''); }}
-              >
-                Clear Filters
-              </Button>
-            </Segment>
+                    <Divider />
+                    <Header as='h4'>Price Range</Header>
+                    <Grid>
+                        <Grid.Row columns={2}>
+                        <Grid.Column><Input placeholder='Min' fluid type='number' value={minPrice} onChange={(e) => setMinPrice(e.target.value)} /></Grid.Column>
+                        <Grid.Column><Input placeholder='Max' fluid type='number' value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} /></Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                    
+                    <Button 
+                        basic color='black' fluid style={{ marginTop: '2em' }}
+                        onClick={() => { setSearchTerm(''); setMinPrice(''); setMaxPrice(''); }}
+                    >
+                        Reset All
+                    </Button>
+                </Segment>
 
-            {/* QUOTES LIST */}
-            {QUOTES_POOL.map((quote, index) => (
-              <Message key={index} color={quote.color} style={{ marginTop: '1.5em', textAlign: 'center', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
-                <Icon name={quote.icon} size='large' />
-                <Message.Header>{quote.title}</Message.Header>
-                <p style={{ fontStyle: 'italic', marginTop: '0.5em' }}>"{quote.text}"</p>
-              </Message>
-            ))}
+                <Divider section />
+
+                {/* --- NEW: SCROLLABLE WELLNESS FEED --- */}
+                <Header as='h4' color='teal'>
+                    <Icon name='rss' /> Wellness Feed
+                </Header>
+                <div style={{ 
+                    maxHeight: '400px', 
+                    overflowY: 'auto', 
+                    paddingRight: '10px',
+                    // Hides scrollbar for cleaner look in Chrome/Safari
+                    scrollbarWidth: 'thin' 
+                }}>
+                    {QUOTES_POOL.map((quote, index) => (
+                        <Message key={index} size='small' style={{ 
+                            marginBottom: '1em', 
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
+                            borderLeft: `3px solid ${quote.color}` // Nice colored accent
+                        }}>
+                            <Header as='h5' style={{ margin: 0, color: '#333' }}>
+                                <Icon name={quote.icon} style={{ color: quote.color }} />
+                                {quote.title}
+                            </Header>
+                            <p style={{ fontSize: '0.85em', color: '#666', marginTop: '5px' }}>{quote.text}</p>
+                        </Message>
+                    ))}
+                </div>
+                {/* ------------------------------------- */}
+
+            </div>
           </Grid.Column>
 
-          {/* RIGHT CONTENT */}
-          <Grid.Column width={11}>
-            <Segment basic style={{ padding: 0, marginBottom: '2em' }}>
-                 <Message attached='top' color='blue'>
-                    <Icon name='info circle' />
-                    <strong>Pet Care Tip:</strong> Always ensure your pet has access to fresh water, especially after playtime!
-                 </Message>
-            </Segment>
+          {/* 3. PRODUCT GRID */}
+          <Grid.Column width={12}>
+            
+            {/* Header Area */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2em' }}>
+                <Header as='h2' style={{ margin: 0 }}>
+                    All Products
+                    <Label circular color='teal' style={{ marginLeft: '10px', verticalAlign: 'middle' }}>
+                        {filteredProducts.length}
+                    </Label>
+                </Header>
+                <span style={{ color: '#888' }}>Sorted by: <strong>Relevance</strong> <Icon name='dropdown' /></span>
+            </div>
 
             {loading ? (
-               <Segment style={{ height: '300px' }}><Dimmer active inverted><Loader size='large'>Fetching Products...</Loader></Dimmer></Segment>
+               <Segment style={{ height: '400px', border: 'none', boxShadow: 'none' }}><Dimmer active inverted><Loader size='large'>Loading Inventory...</Loader></Dimmer></Segment>
             ) : (
               <Grid columns={3} stackable doubling>
-                {/* Check if filter returned empty */}
+                
                 {filteredProducts.length === 0 && (
-                    <div style={{ width: '100%', textAlign: 'center', padding: '2em' }}>
-                        <Header as='h3' icon disabled>
-                            <Icon name='search' />
-                            No products found matching your filters.
-                        </Header>
+                    <div style={{ width: '100%', textAlign: 'center', padding: '4em' }}>
+                        <Icon name='search' size='huge' disabled />
+                        <Header as='h3' disabled>No matches found.</Header>
+                        <Button basic color='teal' onClick={() => { setSearchTerm(''); setMinPrice(''); setMaxPrice(''); }}>Clear Filters</Button>
                     </div>
                 )}
 
                 {filteredProducts.map((product) => (
                   <Grid.Column key={product.product_id}> 
-                    <Card centered fluid className="product-card">
-                      <Image 
-                        src={DEFAULT_PRODUCT_IMG} 
-                        wrapped ui={false} height="200px" style={{ objectFit: 'cover' }} 
-                        label={product.stock < 5 && product.stock > 0 ? { as: 'a', color: 'orange', content: 'Low Stock', icon: 'exclamation', ribbon: true } : product.stock === 0 ? { as: 'a', color: 'red', content: 'Sold Out', icon: 'ban', ribbon: true } : null}
-                      />
-                      <Card.Content>
-                        <Card.Header as='h4'>{product.name}</Card.Header>
-                        <Card.Meta><span className='date'>{product.status || 'General'}</span></Card.Meta>
-                        <Card.Description><Rating icon='star' defaultRating={4} maxRating={5} disabled size='mini' /><span style={{ fontSize: '0.8em', marginLeft: '5px', color: '#999' }}>(12)</span></Card.Description>
+                    <Card fluid style={{ 
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.08)', 
+                        border: 'none', 
+                        borderRadius: '12px',
+                        overflow: 'hidden',
+                        transition: 'transform 0.3s ease'
+                    }}>
+                      
+                      {/* Image Area */}
+                      <div style={{ position: 'relative', height: '240px' }}>
+                          <Image src={DEFAULT_PRODUCT_IMG} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          {product.stock === 0 && <Label color='red' ribbon style={{ position: 'absolute', top: 10, left: -14 }}>SOLD OUT</Label>}
+                          {product.stock < 5 && product.stock > 0 && <Label color='orange' ribbon style={{ position: 'absolute', top: 10, left: -14 }}>LOW STOCK</Label>}
+                          {product.price < 20 && <Label color='green' corner='right' icon='dollar' />}
+                      </div>
+
+                      <Card.Content style={{ borderTop: 'none' }}>
+                        <Card.Header as='h3' style={{ fontSize: '1.3em', marginBottom: '5px' }}>{product.name}</Card.Header>
+                        <Card.Meta style={{ color: '#aaa', textTransform: 'uppercase', fontSize: '0.8em' }}>{product.category || 'Premium Collection'}</Card.Meta>
+                        
+                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+                            <Rating icon='star' defaultRating={5} maxRating={5} disabled size='tiny' />
+                            <span style={{ fontSize: '0.8em', color: '#ccc', marginLeft: '5px' }}>(24)</span>
+                        </div>
                       </Card.Content>
-                      <Card.Content extra>
+
+                      <Card.Content extra style={{ borderTop: '1px solid #f6f6f6', backgroundColor: '#fff', padding: '1.2em' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Header as='h3' color='teal' style={{ margin: 0 }}>${product.price}</Header>
+                            <Header as='h3' style={{ margin: 0, color: '#333' }}>${product.price}</Header>
                             <div>
+                                <Button circular icon='eye' basic color='grey' as={Link} to={`/details/${product.product_id}`} />
                                 <Button 
-                                    size='tiny' color='orange' icon style={{ marginRight: '5px' }}
-                                    onClick={() => { addToCart(product); alert(product.name + " added to Cart!"); }}
-                                >
-                                    <Icon name='cart plus' />
-                                </Button>
-                                <Button size='tiny' basic color='teal' icon as={Link} to={`/details/${product.product_id}`}><Icon name='eye' /></Button>
+                                    circular icon='shopping bag' color='black' 
+                                    onClick={() => { addToCart(product); alert("Added to Cart!"); }}
+                                    disabled={product.stock === 0}
+                                />
                             </div>
                         </div>
                       </Card.Content>

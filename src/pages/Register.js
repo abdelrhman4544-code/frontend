@@ -3,6 +3,9 @@ import { Button, Form, Grid, Header, Message, Segment, Icon, Divider } from 'sem
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+// 1. IMPORT LOCAL ASSET
+import registerBg from '../assets/petbg.avif';
+
 const Register = () => {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({ name: "", email: "", password: "", confirmPassword: "" });
@@ -33,7 +36,7 @@ const Register = () => {
     .then((response) => {
         setLoading(false);
         if(response.data.Status === "OK") {
-            alert("Registration Successful!");
+            alert("Registration Successful! Please Login.");
             navigate('/login');
         } else {
             setError("Registration failed: " + response.data.Message);
@@ -49,20 +52,32 @@ const Register = () => {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      backgroundImage: 'url(https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1920&auto=format&fit=crop)',
+      // 2. BEAST MODE BACKGROUND
+      backgroundColor: '#1b1c1d',
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url(${registerBg})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      padding: '5em 0em' 
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '2em 0' // Add padding for smaller screens
     }}>
-        <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450 }}>
+        <Grid textAlign='center' style={{ width: '100%', maxWidth: '480px', margin: '0 1em' }} verticalAlign='middle'>
+        <Grid.Column>
             
-            <Segment stacked style={{ padding: '2em', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
-                <Header as='h2' color='teal' textAlign='center'>
+            {/* 3. GLASS CARD */}
+            <div style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                backdropFilter: 'blur(15px)', 
+                padding: '3em 2em', 
+                borderRadius: '20px',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+            }}>
+                <Header as='h2' color='teal' textAlign='center' style={{ fontSize: '2em', marginBottom: '0.2em' }}>
                     <Icon name='signup' /> Join the Family
                 </Header>
-                <p style={{ color: '#666', marginBottom: '1.5em' }}>
-                    Create an account to get started.
+                <p style={{ color: '#666', marginBottom: '2em', fontSize: '1.1em' }}>
+                    Create an account to start your journey.
                 </p>
 
                 <Form size='large' onSubmit={handleSubmit} loading={loading}>
@@ -75,6 +90,7 @@ const Register = () => {
                         value={inputs.name || ""} 
                         onChange={handleChange}
                         required
+                        style={{ marginBottom: '1em' }}
                     />
                     <Form.Input 
                         fluid 
@@ -86,6 +102,7 @@ const Register = () => {
                         value={inputs.email || ""} 
                         onChange={handleChange}
                         required
+                        style={{ marginBottom: '1em' }}
                     />
                     <Form.Input
                         fluid
@@ -97,6 +114,7 @@ const Register = () => {
                         value={inputs.password || ""} 
                         onChange={handleChange}
                         required
+                        style={{ marginBottom: '1em' }}
                     />
                     <Form.Input
                         fluid
@@ -108,30 +126,43 @@ const Register = () => {
                         value={inputs.confirmPassword || ""} 
                         onChange={handleChange}
                         required
+                        style={{ marginBottom: '1.5em' }}
                     />
 
-                    {error && <Message negative>{error}</Message>}
+                    {error && (
+                        <Message negative size='small' style={{ marginBottom: '1em', borderRadius: '10px' }}>
+                            <Icon name='warning circle' />
+                            {error}
+                        </Message>
+                    )}
 
-                    <Button color='teal' fluid size='large' type="submit" style={{ marginTop: '1em' }}>
+                    <Button color='teal' fluid size='large' type="submit" style={{ borderRadius: '50px', fontSize: '1.1em' }}>
                         Create Account
                     </Button>
                 </Form>
 
-                {/* --- NEW SOCIAL MEDIA SECTION --- */}
-                <Divider horizontal>Or Sign Up With</Divider>
+                <Divider horizontal style={{ margin: '2em 0', color: '#aaa', textTransform: 'uppercase', fontSize: '0.8em' }}>Or Sign Up With</Divider>
                 
-                <Button color='facebook' fluid style={{ marginBottom: '10px' }}>
-                  <Icon name='facebook' /> Facebook
-                </Button>
-                <Button color='google plus' fluid>
-                  <Icon name='google' /> Google
-                </Button>
+                <Grid columns={2} stackable>
+                    <Grid.Column>
+                        <Button color='facebook' fluid size='small' style={{ borderRadius: '10px' }}>
+                            <Icon name='facebook' /> Facebook
+                        </Button>
+                    </Grid.Column>
+                    <Grid.Column>
+                        <Button color='google plus' fluid size='small' style={{ borderRadius: '10px' }}>
+                            <Icon name='google' /> Google
+                        </Button>
+                    </Grid.Column>
+                </Grid>
 
-            </Segment>
+                <div style={{ marginTop: '2em', paddingTop: '1em', borderTop: '1px solid #eee' }}>
+                    <p style={{ color: '#666' }}>
+                        Already have an account? <Link to="/login" style={{ fontWeight: 'bold', color: '#00b5ad' }}>Log In</Link>
+                    </p>
+                </div>
 
-            <Message attached='bottom' warning>
-                Already have an account? <Link to="/login" style={{ fontWeight: 'bold' }}>Log In</Link>
-            </Message>
+            </div>
         </Grid.Column>
         </Grid>
     </div>

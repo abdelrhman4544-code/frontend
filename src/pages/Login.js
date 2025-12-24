@@ -3,6 +3,9 @@ import { Button, Form, Grid, Header, Message, Segment, Icon, Divider } from 'sem
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+// 1. IMPORT LOCAL ASSET (Guaranteed to work)
+import loginBg from '../assets/petbg.avif';
+
 const Login = () => {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({ email: "", password: "" });
@@ -20,26 +23,17 @@ const Login = () => {
     setLoading(true);
     setError("");
 
-    // Using GET because your backend uses router.get('/login')
     axios.get('http://localhost:8080/api/login', {
         params: { email: inputs.email, password: inputs.password }
     })
     .then((response) => {
         setLoading(false);
-        console.log("Backend Response:", response.data); // <--- Check Console for this!
-
-        // --- THE FIX IS HERE ---
-        // Scenario 1: Backend returns { Status: "OK" }
-        // Scenario 2: Backend returns { user_id: 1, name: "..." }
+        // Robust check for various success responses
         if (response.data.Status === "OK" || response.data.user_id || response.data.id) {
-            
-            // Optional: Save user to local storage so they stay logged in
             localStorage.setItem('user', JSON.stringify(response.data));
-            
             alert("Login Successful! Redirecting...");
             navigate('/shop'); 
         } else {
-            // If it's not OK and has no user ID, show error
             setError(response.data.Message || "Invalid Credentials");
         }
     })
@@ -52,33 +46,45 @@ const Login = () => {
 
   return (
     <div style={{ 
-      minHeight: '100vh', 
-      backgroundImage: 'url(https://images.unsplash.com/photo-1450778865369-0994ca878097?q=80&w=1920&auto=format&fit=crop)',
+      // 1. FULL SCREEN CINEMATIC BACKGROUND
+      minHeight: '100vh',
+      backgroundColor: '#1b1c1d', // Fallback color
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url(${loginBg})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      padding: '5em 0em' 
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
     }}>
-        <Grid textAlign='center' style={{ height: '100%' }} verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450 }}>
+        <Grid textAlign='center' style={{ width: '100%', maxWidth: '450px', margin: '0 1em' }} verticalAlign='middle'>
+        <Grid.Column>
             
-            <Segment stacked style={{ padding: '2em', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
-                <Header as='h2' color='teal' textAlign='center'>
-                    <Icon name='paw' /> Welcome Back!
+            {/* 2. GLASSMORPHISM CARD */}
+            <div style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.9)', // High opacity for readability
+                backdropFilter: 'blur(15px)', 
+                padding: '3em 2em', 
+                borderRadius: '20px',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+            }}>
+                <Header as='h2' color='teal' textAlign='center' style={{ fontSize: '2em', marginBottom: '0.2em' }}>
+                    <Icon name='paw' /> Welcome Back
                 </Header>
-                <p style={{ color: '#666', marginBottom: '1.5em' }}>
-                    Login to access your pet's favorites.
+                <p style={{ color: '#666', marginBottom: '2em', fontSize: '1.1em' }}>
+                    Access your pet's favorites & orders.
                 </p>
 
                 <Form size='large' onSubmit={handleSubmit} loading={loading}>
                     <Form.Input 
                         fluid 
-                        icon='user' 
+                        icon='mail' 
                         iconPosition='left' 
                         placeholder='E-mail address' 
                         name="email"
                         value={inputs.email || ""}
                         onChange={handleChange}
                         required
+                        style={{ marginBottom: '1em' }}
                     />
                     <Form.Input
                         fluid
@@ -90,30 +96,43 @@ const Login = () => {
                         value={inputs.password || ""}
                         onChange={handleChange}
                         required
+                        style={{ marginBottom: '1.5em' }}
                     />
 
-                    {error && <Message negative>{error}</Message>}
+                    {error && (
+                        <Message negative size='small' style={{ marginBottom: '1em', borderRadius: '10px' }}>
+                            <Icon name='warning circle' />
+                            {error}
+                        </Message>
+                    )}
 
-                    <Button color='teal' fluid size='large' type="submit" style={{ marginTop: '1em' }}>
-                        Login
+                    <Button color='teal' fluid size='large' type="submit" style={{ borderRadius: '50px', fontSize: '1.1em' }}>
+                        Sign In
                     </Button>
                 </Form>
 
-                <Divider horizontal>Or Login With</Divider>
+                <Divider horizontal style={{ margin: '2em 0', color: '#aaa', textTransform: 'uppercase', fontSize: '0.8em' }}>Or continue with</Divider>
                 
-                <Button color='facebook' fluid style={{ marginBottom: '10px' }}>
-                  <Icon name='facebook' /> Facebook
-                </Button>
-                <Button color='google plus' fluid>
-                  <Icon name='google' /> Google
-                </Button>
+                <Grid columns={2} stackable>
+                    <Grid.Column>
+                        <Button color='facebook' fluid size='small' style={{ borderRadius: '10px' }}>
+                            <Icon name='facebook' /> Facebook
+                        </Button>
+                    </Grid.Column>
+                    <Grid.Column>
+                        <Button color='google plus' fluid size='small' style={{ borderRadius: '10px' }}>
+                            <Icon name='google' /> Google
+                        </Button>
+                    </Grid.Column>
+                </Grid>
 
-            </Segment>
+                <div style={{ marginTop: '2em', paddingTop: '1em', borderTop: '1px solid #eee' }}>
+                    <p style={{ color: '#666' }}>
+                        Don't have an account? <Link to="/register" style={{ fontWeight: 'bold', color: '#00b5ad' }}>Join the Family</Link>
+                    </p>
+                </div>
 
-            <Message attached='bottom' warning>
-                <Icon name='help' />
-                New to us? <Link to="/register" style={{ fontWeight: 'bold' }}>Sign Up here</Link>
-            </Message>
+            </div>
         </Grid.Column>
         </Grid>
     </div>

@@ -1,51 +1,83 @@
 import React from 'react';
-import { Menu, Container, Icon, Button, Label, Dropdown } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Menu, Container, Icon, Button, Label, Dropdown, Image } from 'semantic-ui-react';
+import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const { cartItems } = useCart(); 
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const location = useLocation();
+
+  // Helper to check active route
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <Menu fixed='top' inverted color='teal'>
+    <Menu 
+        fixed='top' 
+        borderless 
+        style={{ 
+            backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+            backdropFilter: 'blur(10px)', 
+            boxShadow: '0 2px 15px rgba(0,0,0,0.05)',
+            border: 'none',
+            padding: '0.5em 0'
+        }}
+    >
       <Container>
+        {/* BRAND LOGO */}
         <Menu.Item as={Link} to="/" header>
-          <Icon name='paw' size='large' style={{ marginRight: '1.5em' }} />
-          Pet Shop
+          <Icon name='paw' size='large' style={{ color: '#f2711c', marginRight: '0.5em', fontSize: '1.8em' }} />
+          <span style={{ fontSize: '1.5em', fontWeight: '900', letterSpacing: '-1px', color: '#1b1c1d' }}>
+            PET<span style={{ color: '#f2711c' }}>SHOP</span>
+          </span>
         </Menu.Item>
 
-        <Menu.Item as={Link} to="/">Home</Menu.Item>
-        <Menu.Item as={Link} to="/shop">Shop</Menu.Item>
-        <Menu.Item as={Link} to="/about">About Us</Menu.Item>
-        <Menu.Item as={Link} to="/contact">Contact</Menu.Item>
+        {/* NAVIGATION LINKS (Desktop) */}
+        <Menu.Item as={Link} to="/" active={isActive('/')} style={{ fontWeight: 'bold' }}>Home</Menu.Item>
+        <Menu.Item as={Link} to="/shop" active={isActive('/shop')} style={{ fontWeight: 'bold' }}>Shop</Menu.Item>
+        <Menu.Item as={Link} to="/adoption" active={isActive('/adoption')} style={{ fontWeight: 'bold' }}>Adoption</Menu.Item>
+        <Menu.Item as={Link} to="/about" active={isActive('/about')} style={{ fontWeight: 'bold' }}>About</Menu.Item>
+        <Menu.Item as={Link} to="/contact" active={isActive('/contact')} style={{ fontWeight: 'bold' }}>Contact</Menu.Item>
 
+        {/* RIGHT SIDE ACTIONS */}
         <Menu.Menu position='right'>
+          
+          {/* CART BUTTON */}
           <Menu.Item as={Link} to="/cart">
-            <Icon name='shopping cart' />
-            Cart
-            {totalItems > 0 && (
-              <Label color='red' floating circular size='small' style={{ top: '5px', left: '85%' }}>
-                {totalItems}
-              </Label>
-            )}
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <Icon name='shopping bag' size='large' style={{ color: '#1b1c1d', margin: 0 }} />
+                {totalItems > 0 && (
+                  <Label 
+                    color='orange' 
+                    circular 
+                    size='mini' 
+                    style={{ position: 'absolute', top: '-8px', right: '-8px', border: '2px solid white' }}
+                  >
+                    {totalItems}
+                  </Label>
+                )}
+            </div>
           </Menu.Item>
 
-          {/* --- NEW USER ICON DROPDOWN --- */}
-          <Dropdown item icon='user simple'>
-            <Dropdown.Menu>
-              <Dropdown.Item as={Link} to="/profile">My Profile</Dropdown.Item>
-              <Dropdown.Item as={Link} to="/orders">My Orders</Dropdown.Item>
+          {/* USER DROPDOWN */}
+          <Dropdown item icon={null} trigger={<Icon name='user circle' size='large' style={{ color: '#1b1c1d' }} />}>
+            <Dropdown.Menu style={{ marginTop: '10px', border: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+              <Dropdown.Header icon='user' content='Account' />
               <Dropdown.Divider />
-              <Dropdown.Item>Logout</Dropdown.Item>
+              <Dropdown.Item as={Link} to="/profile" icon='id card' text='My Profile' />
+              <Dropdown.Item as={Link} to="/orders" icon='box' text='Orders' />
+              <Dropdown.Item icon='settings' text='Settings' />
+              <Dropdown.Divider />
+              <Dropdown.Item icon='sign-out' text='Logout' />
             </Dropdown.Menu>
           </Dropdown>
 
+          {/* AUTH BUTTONS */}
           <Menu.Item>
-            <Button as={Link} to="/login" inverted>Log in</Button>
-            <Button as={Link} to="/register" inverted style={{ marginLeft: '0.5em' }}>
-              Sign Up
-            </Button>
+            <Button.Group size='small'>
+                <Button as={Link} to="/login" basic color='black' style={{ borderRadius: '20px 0 0 20px' }}>Log in</Button>
+                <Button as={Link} to="/register" color='black' style={{ borderRadius: '0 20px 20px 0' }}>Sign Up</Button>
+            </Button.Group>
           </Menu.Item>
         </Menu.Menu>
       </Container>

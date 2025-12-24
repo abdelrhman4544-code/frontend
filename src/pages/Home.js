@@ -1,218 +1,257 @@
 import React from 'react';
-import { Container, Header, Button, Icon, Grid, Segment, Image, Card, Input } from 'semantic-ui-react';
+import { Container, Header, Button, Icon, Grid, Segment, Image, Card, Input, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
+// ASSETS
 import foodImg from '../assets/food4.jpg';
 import toyImg from '../assets/cattoy.jpg';
 import cageImg from '../assets/cage.jpg';
-// IMPORT THE LOCAL IMAGE
-// Note: We use .. to go up one level from 'pages' to 'src', then into 'assets'
 import petbg from '../assets/petbg.avif';
 
 const Home = () => {
   return (
-    <div style={{ marginTop: '4em' }}>
+    <div style={{ marginTop: '0', backgroundColor: '#fff' }}>
       
-      {/* 1. HERO SECTION (Using Local Image) */}
-      <Segment 
-        inverted 
-        vertical 
-        style={{ 
-          padding: '10em 0em', // Increased padding for a taller, more cinematic look
-          backgroundImage: `url(${petbg})`, // Using the imported variable
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          boxShadow: 'inset 0 0 0 2000px rgba(0,0,0,0.5)' // Slightly darker overlay for better text contrast
-        }}
-      >
+      {/* 1. CINEMATIC HERO (Full Screen Height) */}
+      <div style={{ 
+        height: '90vh', 
+        width: '100%',
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url(${petbg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed', // Parallax
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative'
+      }}>
+        {/* Floating Content Box */}
         <Container text textAlign='center'>
-          <Header
-            as='h1'
-            content='Welcome to the Pet Shop'
-            style={{ 
-              fontSize: '4.5em', 
-              fontWeight: 'bold', 
-              marginBottom: 0, 
-              color: '#ffffff',
-              textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
-            }}
-          />
-          <Header
-            as='h2'
-            content='Premium food, toys, and accessories for your new best friend.'
-            style={{ 
-              fontSize: '1.7em', 
-              fontWeight: 'normal', 
-              marginTop: '1em', 
-              color: '#f0f0f0' 
-            }}
-          />
-          <Button primary size='huge' as={Link} to="/shop" style={{ marginTop: '1.5em' }}>
-            Shop Now
-            <Icon name='right arrow' />
-          </Button>
+          <Segment raised style={{ 
+            backgroundColor: 'rgba(255, 255, 255, 0.9)', 
+            backdropFilter: 'blur(10px)', // Glass effect
+            padding: '4em', 
+            borderRadius: '20px',
+            border: 'none',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
+          }}>
+            <Header
+              as='h1'
+              content='UNLEASH JOY'
+              style={{ 
+                fontSize: '4em', 
+                fontWeight: '900', 
+                letterSpacing: '5px',
+                color: '#1b1c1d',
+                marginBottom: '0.2em',
+                textTransform: 'uppercase'
+              }}
+            />
+            <p style={{ fontSize: '1.4em', color: '#555', marginBottom: '2em', fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+              The ultimate destination for the modern pet parent.
+            </p>
+            
+            <Button.Group size='huge'>
+              <Button color='black' as={Link} to="/shop">
+                Shop Essentials
+              </Button>
+              <Button.Or />
+              <Button color='orange' as={Link} to="/adoption">
+                Adopt a Friend
+              </Button>
+            </Button.Group>
+          </Segment>
         </Container>
-      </Segment>
+      </div>
 
-      {/* 2. WHY CHOOSE US (Expanded Text) */}
-      <Segment style={{ padding: '6em 0em' }} vertical>
-        <Container>
-          <Header as='h2' textAlign='center' style={{ marginBottom: '2em', fontSize: '2.5em' }}>
-            Why We Are The Best Choice
-          </Header>
-          <Grid columns={3} stackable textAlign='center'>
-            <Grid.Row verticalAlign='top'>
-              <Grid.Column>
-                <Icon name='shipping fast' size='huge' color='teal' style={{ marginBottom: '0.5em' }} />
-                <Header as='h3'>Super Fast Delivery</Header>
-                <p style={{ fontSize: '1.1em', color: '#666' }}>
-                  We know your pet can't wait! We offer same-day dispatch on all orders placed before 2 PM. 
-                  Enjoy free shipping on all orders over $50, delivered straight to your doorstep.
-                </p>
-              </Grid.Column>
-              <Grid.Column>
-                <Icon name='heartbeat' size='huge' color='red' style={{ marginBottom: '0.5em' }} />
-                <Header as='h3'>Vet Approved Quality</Header>
-                <p style={{ fontSize: '1.1em', color: '#666' }}>
-                  Your pet's health is our priority. Every food item and toy in our catalog is rigorously 
-                  safety-checked and approved by certified veterinarians to ensure they are safe and nutritious.
-                </p>
-              </Grid.Column>
-              <Grid.Column>
-                <Icon name='dollar' size='huge' color='green' style={{ marginBottom: '0.5em' }} />
-                <Header as='h3'>Unbeatable Prices</Header>
-                <p style={{ fontSize: '1.1em', color: '#666' }}>
-                  Providing the best for your pet shouldn't break the bank. We offer a price match guarantee 
-                  on all premium brands, ensuring you get the highest quality for the best value.
-                </p>
-              </Grid.Column>
-            </Grid.Row>
+      {/* 2. FLOATING TRUST BAR (Overlaps the Hero) */}
+      <Container style={{ marginTop: '-4em', position: 'relative', zIndex: 10 }}>
+        <Segment style={{ padding: '3em', borderRadius: '15px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', border: 'none' }}>
+          <Grid columns={3} stackable divided textAlign='center'>
+            <Grid.Column>
+              <Header as='h3' icon>
+                <Icon name='shipping fast' color='teal' />
+                Same-Day Dispatch
+                <Header.Subheader>Order before 2PM</Header.Subheader>
+              </Header>
+            </Grid.Column>
+            <Grid.Column>
+              <Header as='h3' icon>
+                <Icon name='star' color='yellow' />
+                5-Star Rated
+                <Header.Subheader>Trusted by 10k+ Owners</Header.Subheader>
+              </Header>
+            </Grid.Column>
+            <Grid.Column>
+              <Header as='h3' icon>
+                <Icon name='leaf' color='green' />
+                100% Organic
+                <Header.Subheader>Only the best ingredients</Header.Subheader>
+              </Header>
+            </Grid.Column>
           </Grid>
-        </Container>
-      </Segment>
+        </Segment>
+      </Container>
 
-      {/* 3. ADOPTION SECTION (With Background Images & Fade Effect) */}
-      <Segment style={{ padding: '0em' }} vertical>
-        <Grid celled='internally' columns='equal' stackable>
-          <Grid.Row textAlign='center'>
-            
-            {/* COLUMN 1: ADOPTION */}
-            <Grid.Column style={{ 
-              paddingBottom: '5em', 
-              paddingTop: '5em', 
-              // This line creates a white see-through layer over the image
-              backgroundImage: 'linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.9)), url(https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1000&auto=format&fit=crop)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}>
-              <Header as='h3' style={{ fontSize: '2.5em', color: '#f2711c' }}>
-                <Icon name='paw' />
-                Adopt, Don't Shop
-              </Header>
-              <p style={{ fontSize: '1.4em', maxWidth: '600px', margin: '1em auto', lineHeight: '1.6', color: '#000' }}>
-                Every year, thousands of loving pets are looking for a second chance. 
-                Our adoption program connects rescued animals with forever families. 
-                All our rescue pets come fully vaccinated, microchipped, and ready to love.
-              </p>
-              <Button size='huge' color='orange' icon labelPosition='left'>
-                <Icon name='heart' />
-                Meet Our Rescues
-              </Button>
-            </Grid.Column>
+      {/* 3. THE "EDITORIAL" SPLIT (Edge to Edge) */}
+      <div style={{ marginTop: '6em' }}>
+        <Grid stackable columns={2} style={{ margin: 0 }}>
+          
+          {/* LEFT: DARK MODE NUTRITION */}
+          <Grid.Column style={{ 
+            padding: '8em 4em', 
+            backgroundColor: '#1b1c1d', 
+            color: 'white',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}>
+            <Label color='teal' ribbon>PREMIUM DIET</Label>
+            <Header as='h2' style={{ fontSize: '3.5em', color: 'white', marginTop: '0.5em' }}>
+              Fuel Their <br/> <span style={{ color: '#00b5ad' }}>Adventures.</span>
+            </Header>
+            <p style={{ fontSize: '1.3em', color: '#aaa', maxWidth: '450px', lineHeight: '1.8' }}>
+              Generic kibble is out. Biologically appropriate, grain-free, and nutrient-dense whole foods are in. Give them the health they deserve.
+            </p>
+            <div style={{ marginTop: '2em' }}>
+                <Button inverted color='teal' size='large' as={Link} to="/shop">View Food Collection</Button>
+            </div>
+          </Grid.Column>
 
-           {/* COLUMN 2: NUTRITION */}
-           <Grid.Column style={{ 
-              paddingBottom: '5em', 
-              paddingTop: '5em', 
-              // FIXED: Direct link to the image
-              backgroundImage: 'linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.5)), url(https://wallpapercave.com/wp/wp10346253.jpg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}>
-              <Header as='h3' style={{ fontSize: '2.5em', color: '#2185d0' }}>
-                <Icon name='star' />
-                Premium Nutrition
-              </Header>
-              <p style={{ fontSize: '1.4em', maxWidth: '600px', margin: '1em auto', lineHeight: '1.6', color: '#000' }}>
-                Good health starts with good food. We stock strictly organic, grain-free, 
-                and biologically appropriate diets for dogs, cats, and small animals. 
-                Fuel their adventures with the best ingredients nature has to offer.
-              </p>
-              <Button size='huge' basic color='blue' as={Link} to="/shop">
-                View Food Catalog
-              </Button>
-            </Grid.Column>
+          {/* RIGHT: VIBRANT ADOPTION */}
+          <Grid.Column style={{ 
+            padding: '0', 
+            backgroundImage: 'url(https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?q=80&w=1000&auto=format&fit=crop)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            minHeight: '500px'
+          }}>
+            {/* Overlay content on the image */}
+            <div style={{ 
+                height: '100%', 
+                width: '100%', 
+                background: 'rgba(242, 113, 28, 0.85)', // Strong Orange Overlay
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'center', 
+                alignItems: 'center',
+                textAlign: 'center',
+                padding: '2em',
+                transition: 'opacity 0.3s',
+                opacity: 0, // Hidden by default
+                cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.opacity = 1} // Reveal on Hover
+            onMouseLeave={(e) => e.currentTarget.style.opacity = 0}
+            >
+                <Icon name='home' size='huge' inverted />
+                <Header as='h2' inverted style={{ fontSize: '3em' }}>Change a Life</Header>
+                <Button size='huge' inverted basic as={Link} to="/adoption">Meet The Pets</Button>
+            </div>
             
-          </Grid.Row>
+            {/* Visual hint that it's hoverable */}
+            <div style={{ position: 'absolute', bottom: 20, right: 20, color: 'white', fontWeight: 'bold' }}>
+                HOVER TO ADOPT <Icon name='arrow right' />
+            </div>
+          </Grid.Column>
+
         </Grid>
-      </Segment>
+      </div>
 
-   {/* 4. FEATURED PRODUCTS SECTION (Updated Images) */}
-   <Segment style={{ padding: '5em 0em' }} vertical>
+      {/* 4. CURATED COLLECTIONS (Broken Grid Layout) */}
+      <Segment vertical style={{ padding: '8em 0em', backgroundColor: '#f9f9f9' }}>
         <Container>
-          <Header as='h2' textAlign='center' style={{ marginBottom: '1.5em', fontSize: '2.5em' }}>
-            Featured Products
+          <Header as='h2' textAlign='center' style={{ fontSize: '3em', marginBottom: '1.5em', fontWeight: '900' }}>
+            THE CURATED EDIT
           </Header>
+          
           <Grid columns={3} stackable>
-             
-             {/* Product 1: Dog Food */}
-             <Grid.Column>
-              <Card centered fluid>
-                {/* 2. USE THE VARIABLE HERE */}
-                <Image src={foodImg} wrapped ui={false} height="250px" style={{ objectFit: 'cover' }} />
-                <Card.Content>
-                  <Card.Header>Premium Dog Food</Card.Header>
-                  <Card.Meta>Available in 5kg & 10kg</Card.Meta>
-                  <Card.Description>High-protein formula for active dogs.</Card.Description>
-                </Card.Content>
-                <Card.Content extra>
-                   <Icon name='dollar' /> 25.00
-                   <Button floated='right' primary size='small'>Add to Cart</Button>
-                </Card.Content>
-              </Card>
-            </Grid.Column>
-            
-             {/* Product 2: Cat Toy */}
-             <Grid.Column>
-              <Card centered fluid>
-                {/* USE THE VARIABLE HERE */}
-                <Image src={toyImg} wrapped ui={false} height="250px" style={{ objectFit: 'cover' }} />
-                <Card.Content>
-                  <Card.Header>Interactive Cat Toy</Card.Header>
-                  <Card.Meta>Best Seller</Card.Meta>
-                  <Card.Description>Keep your cat entertained for hours.</Card.Description>
-                </Card.Content>
-                <Card.Content extra>
-                   <Icon name='dollar' /> 12.00
-                   <Button floated='right' primary size='small'>Add to Cart</Button>
-                </Card.Content>
-              </Card>
+            {/* CARD 1 */}
+            <Grid.Column>
+              <div style={{ 
+                  borderRadius: '20px', 
+                  overflow: 'hidden', 
+                  boxShadow: '0 15px 35px rgba(0,0,0,0.1)', 
+                  backgroundColor: 'white',
+                  transition: 'transform 0.3s'
+              }}>
+                <Image src={foodImg} style={{ height: '300px', objectFit: 'cover', width: '100%' }} />
+                <div style={{ padding: '2em' }}>
+                    <Header as='h3'>The Nutrition Edit</Header>
+                    <p style={{ color: '#888' }}>Organic blends for longevity.</p>
+                    <Button basic color='black' fluid as={Link} to="/shop">Shop Food</Button>
+                </div>
+              </div>
             </Grid.Column>
 
-             {/* Product 3: Bird Cage */}
-             <Grid.Column>
-              <Card centered fluid>
-                {/* USE THE VARIABLE HERE */}
-                <Image src={cageImg} wrapped ui={false} height="250px" style={{ objectFit: 'cover' }} />
-                <Card.Content>
-                  <Card.Header>Deluxe Bird Cage</Card.Header>
-                  <Card.Meta>Rust-proof coating</Card.Meta>
-                  <Card.Description>Spacious home for parakeets and finches.</Card.Description>
-                </Card.Content>
-                <Card.Content extra>
-                   <Icon name='dollar' /> 45.00
-                   <Button floated='right' primary size='small'>Add to Cart</Button>
-                </Card.Content>
-              </Card>
+            {/* CARD 2 (Highlighted) */}
+            <Grid.Column style={{ marginTop: '-2em' }}> {/* Offset this card up for visual interest */}
+              <div style={{ 
+                  borderRadius: '20px', 
+                  overflow: 'hidden', 
+                  boxShadow: '0 15px 35px rgba(242, 113, 28, 0.2)', // Orange glow 
+                  backgroundColor: 'white',
+                  border: '2px solid #f2711c'
+              }}>
+                <Label color='orange' ribbon>BEST SELLER</Label>
+                <Image src={toyImg} style={{ height: '320px', objectFit: 'cover', width: '100%' }} />
+                <div style={{ padding: '2em' }}>
+                    <Header as='h3' color='orange'>Interactive Play</Header>
+                    <p style={{ color: '#888' }}>Keep them engaged for hours.</p>
+                    <Button color='orange' fluid as={Link} to="/shop">Shop Toys</Button>
+                </div>
+              </div>
+            </Grid.Column>
+
+            {/* CARD 3 */}
+            <Grid.Column>
+              <div style={{ 
+                  borderRadius: '20px', 
+                  overflow: 'hidden', 
+                  boxShadow: '0 15px 35px rgba(0,0,0,0.1)', 
+                  backgroundColor: 'white' 
+              }}>
+                <Image src={cageImg} style={{ height: '300px', objectFit: 'cover', width: '100%' }} />
+                <div style={{ padding: '2em' }}>
+                    <Header as='h3'>Comfort & Homes</Header>
+                    <p style={{ color: '#888' }}>Safe spaces for small animals.</p>
+                    <Button basic color='black' fluid as={Link} to="/shop">Shop Cages</Button>
+                </div>
+              </div>
             </Grid.Column>
           </Grid>
         </Container>
       </Segment>
 
-      
-     
+      {/* 5. NEWSLETTER (Full Width Gradient) */}
+      <Segment vertical style={{ 
+          padding: '6em 0em', 
+          background: 'linear-gradient(135deg, #00b5ad 0%, #2185d0 100%)',
+          color: 'white'
+      }}>
+        <Container text textAlign='center'>
+            <Icon name='paper plane' size='huge' inverted />
+            <Header as='h2' inverted style={{ fontSize: '3em', marginTop: '0.5em' }}>
+                Join The Inner Circle
+            </Header>
+            <p style={{ fontSize: '1.3em', opacity: 0.9, marginBottom: '2em' }}>
+                Get 15% off your first order and exclusive access to new arrivals.
+            </p>
+            <Input 
+                fluid 
+                size='massive' 
+                placeholder='Enter your email address' 
+                action={{ 
+                    color: 'black', 
+                    labelPosition: 'right', 
+                    icon: 'arrow right', 
+                    content: 'Subscribe' 
+                }} 
+            />
+        </Container>
+      </Segment>
+
     </div>
-    
   );
 };
 

@@ -12,34 +12,44 @@ import Shop from './pages/Shop';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import About from './pages/About'; // <--- NEW IMPORT
+import About from './pages/About';
+import Contact from './pages/Contact';
+import ProductDetails from './pages/ProductDetails';
 
-// Placeholder for Contact (We will build this next)
-const Contact = () => <div style={{marginTop: '100px', textAlign:'center'}}><h1>Contact Us</h1></div>;
+// NEW IMPORT FOR ADOPTION PAGE
+import Adoption from './pages/Adoption'; 
 
 function App() {
   return (
     <Router>
       <div className="App" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        
+        {/* Navigation Bar */}
         <Navbar />
         
+        {/* Main Content */}
         <div style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />
-            <Route path="/cart" element={<Cart />} />
             
+            {/* Dynamic Details Page */}
+            <Route path="/details/:id" element={<ProductDetails />} />
+            
+            <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
-            {/* Now using the Real Page */}
             <Route path="/about" element={<About />} />
-            
             <Route path="/contact" element={<Contact />} />
+            
+            {/* Adoption Page Route */}
+            <Route path="/adoption" element={<Adoption />} />
           </Routes>
         </div>
 
+        {/* Footer */}
         <Footer />
+        
       </div>
     </Router>
   );
